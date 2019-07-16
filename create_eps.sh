@@ -372,7 +372,6 @@ The.Walking.Dead.S09E05.mkv
 The.Walking.Dead.S09E13.avi
 The.Walking.Dead.S09E15.avi
 The.Walking.Dead.S09E16.mp4
-create_eps.sh
 steven.universe.s01e02.mkv
 steven.universe.s01e10.mkv
 steven.universe.s01e12.mp4
