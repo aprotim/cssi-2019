@@ -73,7 +73,5 @@ for filename in get_video_filenames():
     make_dir(season_dir)
     new_filename = "%s/%s - %s.%s" % (season_dir, ep_num, ep_title, extn)
 
-    # TODO: replace this print statement with something that does the actual
-    # renaming
     print "Renaming '%s' to '%s'" % (filename, new_filename)
     os.rename(filename, new_filename)
