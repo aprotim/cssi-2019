@@ -3,31 +3,26 @@ import csv
 # HINT: what do these modules do? How can we use them below?
 import glob
 import os
-import re # This one's tricky. Don't worry if you don't understand the docs.
 
 
 # This function gives us the full list of CSV files
 def get_csv_filenames():
-    # TODO (stretch):  Can we can make this more general?
-    return ['Steven Universe.csv', 'Stranger Things.csv',
-            'The Office.csv', 'The Good Place.csv', 'The Walking Dead.csv']
+    return glob.glob('*.csv')
 
 
 # Create a key for our dictionary
 def make_episode_key(show, season, ep_num):
-    # TODO (stretch): Can we make this work even if our show name has special characters?
-    return (show.title() + '/' + season + '/' + ep_num)
+    return (show.title(), season, ep_num)
 
 
 # Get the list of all video files
 def get_video_filenames():
-    # TODO: replace the body of this function
-    raise NotImplementedError('I don\'t know how to find my files')
+    return glob.glob('shows/*')
 
 # MakeDir should create a directory if we need it
 def make_dir(dirname):
-    # TODO: replace the body of this function
-    pass
+    if not os.path.exists(dirname):
+        os.mkdir(dirname)
 
 
 # Get show title, season, episode number, and file extension from a filename
@@ -50,20 +45,14 @@ episode_titles = {}
 # This loop populates our dictionary of episode titles
 for filename in csv_files:
     csvfile = open(filename)
-    reader = csv.reader(csvfile)
-    # we know the csv fields are ordered:
-    # number,season,episode,airdate,title,tvmaze link
-    # so let's just skip the header line
-    next(reader)
-
-    # TODO (stretch): make this code work if they change the field order
+    reader = csv.DictReader(csvfile)
 
     for row in reader:
         if len(row) == 6: # only process rows with all fields
             show_title = filename[0:-4]
-            season = row[1]
-            ep_num = row[2]
-            ep_title = row[4]
+            season = row['season']
+            ep_num = row['episode']
+            ep_title = row['title']
             if season is not None and ep_num is not None:
                 ep_key = make_episode_key(show_title, season, ep_num)
                 episode_titles[ep_key] = ep_title
@@ -76,7 +65,8 @@ for key, title in episode_titles.items():
 for filename in get_video_filenames():
     show_title, season, ep_num, extn = get_video_info_from_filename(filename)
     ep_key = make_episode_key(show_title, season, ep_num)
-    # TODO (stretch): don't crash if we don't have info for this file
+    if ep_key not in episode_titles:
+        continue
     ep_title = episode_titles[ep_key]
     make_dir(show_title)
     season_dir = "%s/Season %s" % (show_title, season)
@@ -85,4 +75,5 @@ for filename in get_video_filenames():
 
     # TODO: replace this print statement with something that does the actual
     # renaming
-    print "%s should be renamed %s" % (filename, new_filename)
+    print "Renaming '%s' to '%s'" % (filename, new_filename)
+    os.rename(filename, new_filename)
