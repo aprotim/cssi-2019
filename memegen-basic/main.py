@@ -4,6 +4,9 @@ import webapp2
 import jinja2
 import os
 
+from models import Meme
+from google.appengine.ext import ndb
+
 JINJA_ENVIRONMENT = jinja2.Environment(
     loader=jinja2.FileSystemLoader(os.path.dirname(__file__)),
     extensions=['jinja2.ext.autoescape'],
@@ -34,28 +37,45 @@ class MainPage(webapp2.RequestHandler):
 
 class ShowMemeHandler(webapp2.RequestHandler):
     def get(self):
-        results_template = JINJA_ENVIRONMENT.get_template('results.html')
-        the_variable_dict = {
-            "title_color": "red",
-            "line1": "Me: Continues to watch YouTube videos with 10 minutes of battery left",
-            "line2": "Laptop: *shuts off*",
-            "line3": "Me:",
-            "img_url": "https://cdn.drawception.com/drawings/mRTlfYTagD.png"
-        }
+        results_template = JINJA_ENVIRONMENT.get_template('templates/results.html')
+        if self.request.get('meme_key'):
+            meme_key = ndb.Key(urlsafe=self.request.get('meme_key'))
+            meme = meme_key.get()
+            the_variable_dict = {
+                "title_color": "green",
+                "line1": meme.top_text,
+                "line2": meme.middle_text,
+                "line3": meme.bottom_text,
+                "img_url": meme.image_url,
+                "meme_key": meme_key,
+            }
+        else:
+            the_variable_dict = {
+                "title_color": "red",
+                "line1": "Me: Continues to watch YouTube videos with 10 minutes of battery left",
+                "line2": "Laptop: *shuts off*",
+                "line3": "Me:",
+                "img_url": "https://cdn.drawception.com/drawings/mRTlfYTagD.png"
+            }
         self.response.write(results_template.render(the_variable_dict))
 
     def post(self):
-        # results_template = JINJA_ENVIRONMENT.get_template('results.html')
-        # self.response.write(results_template.render())
-
-        results_template = JINJA_ENVIRONMENT.get_template('templates/results.html')
         # Access the user data via the form's input elements' names.
         meme_first_line = self.request.get('user-first-ln')
         meme_second_line = self.request.get('user-second-ln')
         meme_third_line = self.request.get('user-third-ln')
         meme_img_choice = self.request.get('meme-type')
-
         pic_url = get_meme_url(meme_img_choice)
+
+        new_meme = Meme(image_url=pic_url,
+                        top_text=meme_first_line,
+                        middle_text=meme_second_line,
+                        bottom_text=meme_third_line)
+
+        new_meme.put()
+
+        results_template = JINJA_ENVIRONMENT.get_template('templates/results.html')
+
 
         # Organize that user data into a dictionary.
         the_variable_dict = {
@@ -63,6 +83,7 @@ class ShowMemeHandler(webapp2.RequestHandler):
             "line2": meme_second_line,
             "line3": meme_third_line,
             "img_url": pic_url,
+            "meme_key": new_meme.key.urlsafe(),
         }
         self.response.write(results_template.render(the_variable_dict))
 
