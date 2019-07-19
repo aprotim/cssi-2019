@@ -45,17 +45,14 @@ class ShowMemeHandler(webapp2.RequestHandler):
         self.response.write(results_template.render(the_variable_dict))
 
     def post(self):
-        # results_template = JINJA_ENVIRONMENT.get_template('results.html')
-        # self.response.write(results_template.render())
-
-        results_template = JINJA_ENVIRONMENT.get_template('templates/results.html')
         # Access the user data via the form's input elements' names.
         meme_first_line = self.request.get('user-first-ln')
         meme_second_line = self.request.get('user-second-ln')
         meme_third_line = self.request.get('user-third-ln')
         meme_img_choice = self.request.get('meme-type')
-
         pic_url = get_meme_url(meme_img_choice)
+
+        results_template = JINJA_ENVIRONMENT.get_template('templates/results.html')
 
         # Organize that user data into a dictionary.
         the_variable_dict = {
