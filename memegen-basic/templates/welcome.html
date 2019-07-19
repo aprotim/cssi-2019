@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Welcome</title>
+  </head>
+  <body>
+    <h1>{{greeting}}</h1>
+    <img height="100px" width="150px"
+      src="https://www.publicdomainpictures.net/pictures/90000/velka/alpaca-chewing.jpg">
+    <h2>Welcome to my {{adjective}} meme generator!</h2>
+    <!-- <form> -->
+    <form method="post" action="/memeresult">
+      Line 1 of Meme:<br>
+      <input type="text" name="user-first-ln" value="First Line of Meme"><br>
+      Line 2 of Meme:<br>
+      <input type="text" name="user-second-ln" value="Second Line of Meme"><br>
+      Line 3 of Meme:<br>
+      <input type="text" name="user-third-ln" value="Third Line of Meme"><br>
+      Meme Type:<br>
+      <select name="meme-type">
+        <option value="classic-surprised-pikachu">Classic Surprised Pikachu</option>
+        <option value="shocked-pikachu">Very Shocked Pikachu</option>
+        <option value="detective-surprised-pikachu">Detective Surprised Pikachu</option>
+        <option value="ketchup-loving-pikachu">Ketchup Loving Pikachu</option>
+      </select>
+      <input type="submit" value="Go!">
+    </form>
+  </body>
+</html>
