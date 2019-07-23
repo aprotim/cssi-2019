@@ -1,0 +1,23 @@
+runtime: python27
+api_version: 1
+threadsafe: yes
+
+handlers:
+- url: /style
+  static_dir: style
+
+- url: /scripts
+  static_dir: scripts
+
+- url: /meme_images
+  static_dir: meme_images
+
+- url: .*
+  script: main.app
+  login: optional
+
+libraries:
+- name: webapp2
+  version: "2.5.2"
+- name: jinja2
+  version: latest
